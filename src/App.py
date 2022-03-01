@@ -1,22 +1,19 @@
 import requests
 import payload
 import random
-import pprint
 import os
 import sys
 import ImageURLCreator
+import HTMLCreator
 from dotenv import load_dotenv
 load_dotenv()
 
 private_key = os.getenv('PRIVATE_KEY')
 public_key = os.getenv('PUBLIC_KEY')
-pp = pprint.PrettyPrinter()
-
 payloadCreator = payload.PayloadCreator(private_key, public_key)
 
-# characterRequest = requests.get('https://gateway.marvel.com:443/v1/public/characters/1009351', params=payloadCreator.create_auth_payload())
-
-storiesRequest = requests.get('https://gateway.marvel.com:443/v1/public/characters/1009351/stories', params=payloadCreator.create_payload(limit=1, offset=0))
+storiesRequest = requests.get('https://gateway.marvel.com:443/v1/public/characters/1009351/stories',
+                              params=payloadCreator.create_payload(limit=1, offset=0))
 data = storiesRequest.json()
 
 if (data['code'] != 200):
@@ -27,17 +24,21 @@ if (data['code'] != 200):
 numberOfStories = data['data']['total']
 randomStoryNumber = random.randint(0, numberOfStories - 1)
 
-storiesRequest = requests.get('https://gateway.marvel.com:443/v1/public/characters/1009351/stories', params=payloadCreator.create_payload(limit=1, offset=randomStoryNumber))
+storiesRequest = requests.get('https://gateway.marvel.com:443/v1/public/characters/1009351/stories',
+                              params=payloadCreator.create_payload(limit=1, offset=randomStoryNumber))
 
 data = storiesRequest.json()
-# pp.pprint(data)
-attribution = data['attributionText']
 result = data['data']['results'][0]
 
-print(storiesRequest.url)
-pp.pprint(result['description'])
-# pp.pprint(result['characters']['items'])
-for character in result['characters']['items']:
-    pp.pprint(ImageURLCreator.createImageURL(character['resourceURI'], payloadCreator))
-# pp.pprint(result)
-print(attribution)
+characters = [{'name': character['name'], "url": ImageURLCreator.createImageURL(
+    character['resourceURI'], payloadCreator)} for character in result['characters']['items']]
+
+description = result['description'] if result['description'] != "" else "No description for this story."
+outputData = {
+    "title": result['title'],
+    "description": description,
+    "characters": characters,
+    "attributiontext": data['attributionText']
+}
+
+HTMLCreator.create_output_file(outputData)

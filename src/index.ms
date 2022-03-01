@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marvel API test</title>
+    <link rel="stylesheet" href="../src/StyleSheet.css">
+</head>
+
+<body>
+    <h1>{{title}}</h1>
+    <p>{{description}}</p>
+    <h2>Characters in the story</h2>
+    {{#characters}}
+    <figure>
+        <img src="{{url}}" alt="{{name}}">
+        <figcaption>{{name}}</figcaption>
+    </figure>
+    {{/characters}}
+    <p class="attributiontext">{{attributiontext}}</p>
+</body>
+
+</html>
