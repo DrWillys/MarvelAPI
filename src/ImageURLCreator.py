@@ -6,7 +6,7 @@ def createImageURL(resourceURI, payloadCreator):
     data = characterRequest.json()
     thumbnail = data['data']['results'][0]['thumbnail']
 
-    return thumbnail['path'] + "/" + "portrait_xlarge." + thumbnail['extension'] 
+    return f"{thumbnail['path']}/portrait_xlarge.{thumbnail['extension']}" 
 
 if __name__ == "__main__":
     import os
