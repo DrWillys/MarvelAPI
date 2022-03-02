@@ -1,9 +1,9 @@
-import requestDecorator
+import requestdecorator
 
 
-def create_image_url(resourceURI, payloadCreator):
-    characterResponse = requestDecorator.make_get_request(
-        resourceURI, payloadCreator.create_auth_payload())
+def create_image_url(resourceURI, payloadBuilder):
+    characterResponse = requestdecorator.make_get_request(
+        resourceURI, payloadBuilder.build_auth_payload())
     data = characterResponse.json()
     thumbnail = data['data']['results'][0]['thumbnail']
 
