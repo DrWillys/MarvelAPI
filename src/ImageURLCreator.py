@@ -1,22 +1,10 @@
-import requests
-import payload
+import requestDecorator
 
-def createImageURL(resourceURI, payloadCreator):
-    characterRequest = requests.get(resourceURI, params=payloadCreator.create_auth_payload())
-    data = characterRequest.json()
+
+def create_image_url(resourceURI, payloadCreator):
+    characterResponse = requestDecorator.make_get_request(
+        resourceURI, payloadCreator.create_auth_payload())
+    data = characterResponse.json()
     thumbnail = data['data']['results'][0]['thumbnail']
 
-    return f"{thumbnail['path']}/portrait_xlarge.{thumbnail['extension']}" 
-
-if __name__ == "__main__":
-    import os
-    from dotenv import load_dotenv
-    import pprint
-    pp = pprint.PrettyPrinter()
-    load_dotenv()
-
-    private_key = os.getenv('PRIVATE_KEY')
-    public_key = os.getenv('PUBLIC_KEY')
-
-    payloadCreator = payload.PayloadCreator(private_key, public_key)
-    pp.pprint(createImageURL('https://gateway.marvel.com:443/v1/public/characters/1009351', payloadCreator))
+    return f"{thumbnail['path']}/standard_large.{thumbnail['extension']}"
