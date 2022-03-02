@@ -4,6 +4,7 @@ import imageurlcreator
 import requestdecorator
 import random
 import sys
+from pathlib import Path
 
 
 def get_story_data(characterId, payloadBuilder, limit, offset):
@@ -47,7 +48,7 @@ def create_output_file(characterId, payloadBuilder):
     with open('index.mustache', 'r') as f:
         output = chevron.render(f, templateData)
 
-    filename = '..\\output\\index.html'
+    filename = Path('../output/index.html')
     os.makedirs(os.path.dirname(filename), exist_ok=True)
     with open(filename, 'w', encoding='utf8') as f:
         f.write(output)
